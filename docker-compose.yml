@@ -1,0 +1,21 @@
+version: "3"
+
+# Docker Compose works with services. 1 service = 1 container
+services:
+  db:    
+    image: "postgres:latest"
+    restart: always
+    container_name: books_match_db
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: books_match_db    
+    volumes:
+      - ./db_data:/var/lib/postgresql/data/ # The volumes allows to share a folder with container
+      - ./db_scripts/db_ddl.sql:/docker-entrypoint-initdb.d/1_db_ddl.sql # Script automatically run after docker starts
+      - ./db_scripts/db_dml.sql:/docker-entrypoint-initdb.d/2_db_dml.sql # Script automatically run after docker starts
+
+volumes:
+  db_data:
